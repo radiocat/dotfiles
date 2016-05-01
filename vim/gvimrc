@@ -1,4 +1,5 @@
 " カラースキーム
+set background=dark
 colorscheme hybrid
 
 " ウィンドウサイズ
