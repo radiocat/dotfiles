@@ -1,7 +1,7 @@
 "----------------------------------------------------
-" æ–‡å­—ã‚³ãƒ¼ãƒ‰
+" •¶šƒR[ƒh
 "----------------------------------------------------
-" æ–‡å­—ã‚³ãƒ¼ãƒ‰ã®è‡ªå‹•èªè­˜
+" •¶šƒR[ƒh‚Ì©“®”F¯
 if &encoding !=# 'utf-8'
   set encoding=japan
   set fileencoding=japan
@@ -9,16 +9,16 @@ endif
 if has('iconv')
   let s:enc_euc = 'euc-jp'
   let s:enc_jis = 'iso-2022-jp'
-  " iconvãŒeucJP-msã«å¯¾å¿œã—ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
+  " iconv‚ªeucJP-ms‚É‘Î‰‚µ‚Ä‚¢‚é‚©‚ğƒ`ƒFƒbƒN
   if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
     let s:enc_euc = 'eucjp-ms'
     let s:enc_jis = 'iso-2022-jp-3'
-  " iconvãŒJISX0213ã«å¯¾å¿œã—ã¦ã„ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
+  " iconv‚ªJISX0213‚É‘Î‰‚µ‚Ä‚¢‚é‚©‚ğƒ`ƒFƒbƒN
   elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
     let s:enc_euc = 'euc-jisx0213'
     let s:enc_jis = 'iso-2022-jp-3'
   endif
-  " fileencodingsã‚’æ§‹ç¯‰
+  " fileencodings‚ğ\’z
   if &encoding ==# 'utf-8'
     let s:fileencodings_default = &fileencodings
     let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
@@ -38,11 +38,11 @@ if has('iconv')
       let &fileencodings = &fileencodings .','. s:enc_euc
     endif
   endif
-  " å®šæ•°ã‚’å‡¦åˆ†
+  " ’è”‚ğˆ•ª
   unlet s:enc_euc
   unlet s:enc_jis
 endif
-" æ—¥æœ¬èªã‚’å«ã¾ãªã„å ´åˆã¯ fileencoding ã« encoding ã‚’ä½¿ã†ã‚ˆã†ã«ã™ã‚‹
+" “ú–{Œê‚ğŠÜ‚Ü‚È‚¢ê‡‚Í fileencoding ‚É encoding ‚ğg‚¤‚æ‚¤‚É‚·‚é
 if has('autocmd')
   function! AU_ReCheck_FENC()
     if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
@@ -51,9 +51,9 @@ if has('autocmd')
   endfunction
   autocmd BufReadPost * call AU_ReCheck_FENC()
 endif
-" æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã®è‡ªå‹•èªè­˜
+" ‰üsƒR[ƒh‚Ì©“®”F¯
 set fileformats=unix,dos,mac
-" â–¡ã¨ã‹â—‹ã®æ–‡å­—ãŒã‚ã£ã¦ã‚‚ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®ãŒãšã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹
+"  ‚Æ‚©›‚Ì•¶š‚ª‚ ‚Á‚Ä‚àƒJ[ƒ\ƒ‹ˆÊ’u‚ª‚¸‚ê‚È‚¢‚æ‚¤‚É‚·‚é
 if exists('&ambiwidth')
   set ambiwidth=double
 endif
@@ -103,8 +103,10 @@ NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 't9md/vim-textmanip'
 
-
 NeoBundle 'Shougo/unite.vim'
+" Git
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'kmnk/vim-unite-giti.git'
 " color scheme
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'tomasr/molokai'
@@ -126,65 +128,65 @@ NeoBundleCheck
 
 
 "----------------------------------------------------
-" å„ç¨®è¨­å®š
+" Šeíİ’è
 "----------------------------------------------------
 syntax on
 
-" Windowsã‚­ãƒ¼ãƒãƒƒãƒ”ãƒ³ã‚°
+" WindowsƒL[ƒ}ƒbƒsƒ“ƒO
 source $VIMRUNTIME/mswin.vim
-" ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆå…ˆ
+" ƒeƒ“ƒ|ƒ‰ƒŠƒtƒ@ƒCƒ‹‚Ìì¬æ
 set directory=$HOME/.vim/tmp
-" ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆå…ˆ
+" ƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚Ìì¬æ
 set backupdir=$HOME/.vim/tmp
-" unduãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆå…ˆ
+" unduƒtƒ@ƒCƒ‹‚Ìì¬æ
 set undodir=$HOME/.vim/tmp
-" ã‚¹ãƒ¯ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‰ãªã„
+" ƒXƒƒbƒvƒtƒ@ƒCƒ‹‚ğì‚ç‚È‚¢
 set noswapfile
-" ã‚«ãƒ¼ã‚½ãƒ«ãŒä½•è¡Œç›®ã®ä½•åˆ—ç›®ã«ç½®ã‹ã‚Œã¦ã„ã‚‹ã‹ã‚’è¡¨ç¤ºã™ã‚‹
+" ƒJ[ƒ\ƒ‹‚ª‰½s–Ú‚Ì‰½—ñ–Ú‚É’u‚©‚ê‚Ä‚¢‚é‚©‚ğ•\¦‚·‚é
 set ruler
-" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã«ä½¿ã‚ã‚Œã‚‹ç”»é¢ä¸Šã®è¡Œæ•°
+" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ég‚í‚ê‚é‰æ–Êã‚Ìs”
 set cmdheight=2
-" ã‚¨ãƒ‡ã‚£ã‚¿ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®æœ«å°¾ã‹ã‚‰2è¡Œç›®ã«ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ã‚¤ãƒ³ã‚’å¸¸æ™‚è¡¨ç¤ºã•ã›ã‚‹
+" ƒGƒfƒBƒ^ƒEƒBƒ“ƒhƒE‚Ì––”ö‚©‚ç2s–Ú‚ÉƒXƒe[ƒ^ƒXƒ‰ƒCƒ“‚ğí•\¦‚³‚¹‚é
 set laststatus=2
-" ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã«ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹æƒ…å ±ç­‰ã‚’è¡¨ç¤ºã™ã‚‹
+" ƒEƒCƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹ƒo[‚Éƒtƒ@ƒCƒ‹‚ÌƒpƒXî•ñ“™‚ğ•\¦‚·‚é
 set title
-" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ãƒ¢ãƒ¼ãƒ‰ã§<Tab>ã‚­ãƒ¼ã«ã‚ˆã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åè£œå®Œã‚’æœ‰åŠ¹ã«ã™ã‚‹
+" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒ‚[ƒh‚Å<Tab>ƒL[‚É‚æ‚éƒtƒ@ƒCƒ‹–¼•âŠ®‚ğ—LŒø‚É‚·‚é
 set wildmenu
-" å…¥åŠ›ä¸­ã®ã‚³ãƒãƒ³ãƒ‰ã‚’è¡¨ç¤ºã™ã‚‹
+" “ü—Í’†‚ÌƒRƒ}ƒ“ƒh‚ğ•\¦‚·‚é
 set showcmd
-" å°æ–‡å­—ã®ã¿ã§æ¤œç´¢ã—ãŸã¨ãã«å¤§æ–‡å­—å°æ–‡å­—ã‚’ç„¡è¦–ã™ã‚‹
+" ¬•¶š‚Ì‚İ‚ÅŒŸõ‚µ‚½‚Æ‚«‚É‘å•¶š¬•¶š‚ğ–³‹‚·‚é
 set smartcase
-" æ¤œç´¢çµæœã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆè¡¨ç¤ºã™ã‚‹
+" ŒŸõŒ‹‰Ê‚ğƒnƒCƒ‰ƒCƒg•\¦‚·‚é
 set hlsearch
-" ã‚¿ãƒ–å…¥åŠ›ã‚’è¤‡æ•°ã®ç©ºç™½å…¥åŠ›ã«ç½®ãæ›ãˆã‚‹
+" ƒ^ƒu“ü—Í‚ğ•¡”‚Ì‹ó”’“ü—Í‚É’u‚«Š·‚¦‚é
 set expandtab
-" æ¤œç´¢ãƒ¯ãƒ¼ãƒ‰ã®æœ€åˆã®æ–‡å­—ã‚’å…¥åŠ›ã—ãŸæ™‚ç‚¹ã§æ¤œç´¢ã‚’é–‹å§‹ã™ã‚‹
+" ŒŸõƒ[ƒh‚ÌÅ‰‚Ì•¶š‚ğ“ü—Í‚µ‚½“_‚ÅŒŸõ‚ğŠJn‚·‚é
 set incsearch
-" ä¿å­˜ã•ã‚Œã¦ã„ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹ã¨ãã§ã‚‚åˆ¥ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã‘ã‚‹ã‚ˆã†ã«ã™ã‚‹
+" •Û‘¶‚³‚ê‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ª‚ ‚é‚Æ‚«‚Å‚à•Ê‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚é‚æ‚¤‚É‚·‚é
 set hidden
-" ä¸å¯è¦–æ–‡å­—ã‚’è¡¨ç¤ºã™ã‚‹
+" •s‰Â‹•¶š‚ğ•\¦‚·‚é
 set list
-" ã‚¿ãƒ–ã¨è¡Œã®ç¶šãã‚’å¯è¦–åŒ–ã™ã‚‹
+" ƒ^ƒu‚Æs‚Ì‘±‚«‚ğ‰Â‹‰»‚·‚é
 set listchars=tab:>\ ,extends:<
-" è¡Œç•ªå·ã‚’è¡¨ç¤ºã™ã‚‹
+" s”Ô†‚ğ•\¦‚·‚é
 set number
-" å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚„ãƒ–ãƒ¬ãƒ¼ã‚¹ã‚’è¡¨ç¤ºã™ã‚‹
+" ‘Î‰‚·‚éŠ‡ŒÊ‚âƒuƒŒ[ƒX‚ğ•\¦‚·‚é
 set showmatch
-" æ”¹è¡Œæ™‚ã«å‰ã®è¡Œã®ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã‚’ç¶™ç¶šã™ã‚‹
+" ‰üs‚É‘O‚Ìs‚ÌƒCƒ“ƒfƒ“ƒg‚ğŒp‘±‚·‚é
 set autoindent
-" æ”¹è¡Œæ™‚ã«å…¥åŠ›ã•ã‚ŒãŸè¡Œã®æœ«å°¾ã«åˆã‚ã›ã¦æ¬¡ã®è¡Œã®ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã‚’å¢—æ¸›ã™ã‚‹
+" ‰üs‚É“ü—Í‚³‚ê‚½s‚Ì––”ö‚É‡‚í‚¹‚ÄŸ‚Ìs‚ÌƒCƒ“ƒfƒ“ƒg‚ğ‘Œ¸‚·‚é
 set smartindent
-" ã‚¿ãƒ–æ–‡å­—ã®è¡¨ç¤ºå¹…
+" ƒ^ƒu•¶š‚Ì•\¦•
 set tabstop=2
-" VimãŒæŒ¿å…¥ã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã®å¹…
+" Vim‚ª‘}“ü‚·‚éƒCƒ“ƒfƒ“ƒg‚Ì•
 set shiftwidth=2
-" è¡Œé ­ã®ä½™ç™½å†…ã§ Tab ã‚’æ‰“ã¡è¾¼ã‚€ã¨ã€'shiftwidth' ã®æ•°ã ã‘ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã™ã‚‹
+" s“ª‚Ì—]”’“à‚Å Tab ‚ğ‘Å‚¿‚Ş‚ÆA'shiftwidth' ‚Ì”‚¾‚¯ƒCƒ“ƒfƒ“ƒg‚·‚é
 set smarttab
-" ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡Œé ­ã€è¡Œæœ«ã§æ­¢ã¾ã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹
+" ƒJ[ƒ\ƒ‹‚ğs“ªAs––‚Å~‚Ü‚ç‚È‚¢‚æ‚¤‚É‚·‚é
 set whichwrap=b,s,h,l,<,>,[,]
-" è¡Œç•ªå·ã®è‰²
+" s”Ô†‚ÌF
 highlight LineNr ctermfg=darkyellow
-" solarizeã®ãƒ¡ãƒ‹ãƒ¥ãƒ¼è¡¨ç¤º
+" solarize‚Ìƒƒjƒ…[•\¦
 " let g:solarized_menu=0
 " colorscheme solarized
 "let g:hybrid_custom_term_colors = 1
@@ -194,7 +196,7 @@ let g:hybrid_reduced_contrast = 1 " Remove this line if using the default palett
 
 
 """"""""""""""""""""""""""""""
-" è‡ªå‹•çš„ã«é–‰ã˜æ‹¬å¼§ã‚’å…¥åŠ›
+" ©“®“I‚É•Â‚¶Š‡ŒÊ‚ğ“ü—Í
 """"""""""""""""""""""""""""""
 imap { {}<LEFT>
 imap [ []<LEFT>
@@ -202,7 +204,7 @@ imap ( ()<LEFT>
 
 
 "----------------------------------------------------
-" uniteã®è¨­å®š
+" unite‚Ìİ’è
 "----------------------------------------------------
 
 
@@ -211,43 +213,43 @@ nnoremap [unite] <Nop>
 nmap <Space>f [unite]
  
 "unite general settings
-"ã‚¤ãƒ³ã‚µãƒ¼ãƒˆãƒ¢ãƒ¼ãƒ‰ã§é–‹å§‹
+"ƒCƒ“ƒT[ƒgƒ‚[ƒh‚ÅŠJn
 let g:unite_enable_start_insert = 1
-"æœ€è¿‘é–‹ã„ãŸãƒ•ã‚¡ã‚¤ãƒ«å±¥æ­´ã®ä¿å­˜æ•°
+"Å‹ßŠJ‚¢‚½ƒtƒ@ƒCƒ‹—š—ğ‚Ì•Û‘¶”
 let g:unite_source_file_mru_limit = 50
  
-"file_mruã®è¡¨ç¤ºãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’æŒ‡å®šã€‚ç©ºã«ã™ã‚‹ã¨è¡¨ç¤ºã‚¹ãƒ”ãƒ¼ãƒ‰ãŒé«˜é€ŸåŒ–ã•ã‚Œã‚‹
+"file_mru‚Ì•\¦ƒtƒH[ƒ}ƒbƒg‚ğw’èB‹ó‚É‚·‚é‚Æ•\¦ƒXƒs[ƒh‚ª‚‘¬‰»‚³‚ê‚é
 let g:unite_source_file_mru_filename_format = ''
  
-"ç¾åœ¨é–‹ã„ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã€‚
-"é–‹ã„ã¦ã„ãªã„å ´åˆã¯ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+"Œ»İŠJ‚¢‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ‰º‚Ìƒtƒ@ƒCƒ‹ˆê——B
+"ŠJ‚¢‚Ä‚¢‚È‚¢ê‡‚ÍƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ
 nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-"ãƒãƒƒãƒ•ã‚¡ä¸€è¦§
+"ƒoƒbƒtƒ@ˆê——
 nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
-"ãƒ¬ã‚¸ã‚¹ã‚¿ä¸€è¦§
+"ƒŒƒWƒXƒ^ˆê——
 nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
-"æœ€è¿‘ä½¿ç”¨ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§
-nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
-"ãƒ–ãƒƒã‚¯ãƒãƒ¼ã‚¯ä¸€è¦§
-nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
-"ãƒ–ãƒƒã‚¯ãƒãƒ¼ã‚¯ã«è¿½åŠ 
+"Å‹ßg—p‚µ‚½ƒtƒ@ƒCƒ‹ˆê——
+nnoremap <silent> [unite]h :<C-u>Unite file_mru<CR>
+"ƒuƒbƒNƒ}[ƒNˆê——
+nnoremap <silent> [unite]m :<C-u>Unite bookmark<CR>
+"ƒuƒbƒNƒ}[ƒN‚É’Ç‰Á
 nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
-"uniteã‚’é–‹ã„ã¦ã„ã‚‹é–“ã®ã‚­ãƒ¼ãƒãƒƒãƒ”ãƒ³ã‚°
+"unite‚ğŠJ‚¢‚Ä‚¢‚éŠÔ‚ÌƒL[ƒ}ƒbƒsƒ“ƒO
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
-	"ESCã§uniteã‚’çµ‚äº†
+	"ESC‚Åunite‚ğI—¹
 	nmap <buffer> <ESC> <Plug>(unite_exit)
-	"å…¥åŠ›ãƒ¢ãƒ¼ãƒ‰ã®ã¨ãjjã§ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰ã«ç§»å‹•
+	"“ü—Íƒ‚[ƒh‚Ì‚Æ‚«jj‚Åƒm[ƒ}ƒ‹ƒ‚[ƒh‚ÉˆÚ“®
 	imap <buffer> jj <Plug>(unite_insert_leave)
-	"å…¥åŠ›ãƒ¢ãƒ¼ãƒ‰ã®ã¨ãctrl+wã§ãƒãƒƒã‚¯ã‚¹ãƒ©ãƒƒã‚·ãƒ¥ã‚‚å‰Šé™¤
+	"“ü—Íƒ‚[ƒh‚Ì‚Æ‚«ctrl+w‚ÅƒoƒbƒNƒXƒ‰ƒbƒVƒ…‚àíœ
 	imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-	"ctrl+jã§ç¸¦ã«åˆ†å‰²ã—ã¦é–‹ã
+	"ctrl+j‚Åc‚É•ªŠ„‚µ‚ÄŠJ‚­
 	nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 	inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-	"ctrl+jã§æ¨ªã«åˆ†å‰²ã—ã¦é–‹ã
+	"ctrl+j‚Å‰¡‚É•ªŠ„‚µ‚ÄŠJ‚­
 	nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 	inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-	"ctrl+oã§ãã®å ´æ‰€ã«é–‹ã
+	"ctrl+o‚Å‚»‚ÌêŠ‚ÉŠJ‚­
 	nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
 	inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
 endfunction"}}}
