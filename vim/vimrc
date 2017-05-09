@@ -68,6 +68,7 @@ NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'Chiel92/vim-autoformat'
+NeoBundle 'vim-scripts/zoom.vim'
 " JS
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'maksimr/vim-jsbeautify'
