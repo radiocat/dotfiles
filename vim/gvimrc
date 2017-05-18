@@ -27,4 +27,16 @@ augroup END
 if filereadable(g:save_window_file)
   execute 'source' g:save_window_file
 endif
+" フォント設定
+set linespace=0
+if has('win32')
+  set guifont=Migu_1M:h11:cSHIFTJIS:qDRAFT
+  set guifontwide=Migu_1M:h11:cSHIFTJIS:qDRAFT
+elseif has('mac')
+  set guifont=Migu\ 1M\ Regular:h14
+  set guifontwide=Migu\ 1M\ Regular:h14
+endif
+
+
+
 

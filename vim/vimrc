@@ -158,6 +158,8 @@ set smarttab
 set whichwrap=b,s,h,l,<,>,[,]
 " 行番号の色
 highlight LineNr ctermfg=darkyellow
+" 60桁目の色
+set colorcolumn=60
 " solarizeのメニュー表示
 " let g:solarized_menu=0
 " colorscheme solarized
