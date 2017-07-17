@@ -1,0 +1,7 @@
+#[core]
+#  autocrlf = input
+#  editor = vim
+#[user]
+#  name = radiocat
+#  email = hoge@example.com
+

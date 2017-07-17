@@ -1,0 +1,19 @@
+[include]
+  path = ~/.gitconfig.local
+[color]
+  ui = auto
+[alias]
+  st = status
+  co = checkout
+  cm = commit
+  mg = merge
+  tree = log --graph --date=short --pretty='format:%C(yellow)%h%Creset %s %Cgreen(%an)%Creset %Cred%d%Creset'
+  lgg = log --stat --decorate=short --pretty='format:%C(yellow)%h %Cgreen%cr %Cblue%cn%Cred%d %Creset%s %C(cyan)%b'
+  lgo = log --oneline --pretty='format:%C(yellow)%h %C(green)%cd %C(blue)%an%C(red)%d %C(reset)%s'
+  lgnm = log --no-merges --date=short --pretty='format:%C(yellow)%h %C(green)%cd %C(blue)%an%C(red)%d %C(reset)%s'
+  lgm = log --merges --date=short --pretty='format:%C(yellow)%h %C(green)%cd %C(blue)%an%C(red)%d %C(reset)%s'
+[merge]
+  ff = false
+[pull]
+  rebase= true
+
