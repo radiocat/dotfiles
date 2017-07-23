@@ -7,13 +7,13 @@ if has('mac')
   set fileformats=unix,mac,dos
   set fileencoding=utf-8
   set fileencodings=utf-8,iso-2022-jp,cp932,euc-jp
-  set termencoding=
+"  set termencoding=
 elseif has('win32')
   set fileformat=dos
   set fileformats=dos,unix,mac
   set fileencoding=utf-8
   set fileencodings=iso-2022-jp,utf-8,euc-jp,cp932
-  set termencoding=
+"  set termencoding=
 endif
 " □とか○の文字があってもカーソル位置がずれないようにする
 if exists('&ambiwidth')
@@ -72,6 +72,8 @@ NeoBundle 'vim-scripts/zoom.vim'
 " JS
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'maksimr/vim-jsbeautify'
+" Golang
+NeoBundle 'fatih/vim-go'
 
 NeoBundle 'Shougo/unite.vim'
 " Git
@@ -250,4 +252,10 @@ function! s:Jq(...)
     endif
     execute "%! jq \"" . l:arg . "\""
 endfunction
+
+" Golang
+let g:go_fmt_command = "goimports"
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
 
