@@ -18,10 +18,15 @@ $ curl -fsSLO https://raw.githubusercontent.com/altercation/vim-colors-solarized
 ```
 
 
-
-## その他 
+### その他 
 
 * Windowsの場合はvimprocのmakeでエラーが出る。参照⇒https://github.com/Shougo/neobundle.vim#1-install-neobundle
+
+## bashの設定
+
+```bash
+$ echo "test -r ~/.bashrc && . ~/.bashrc" >> ~/.bash_profile
+```
 
 
 ## .gitconfigについて
