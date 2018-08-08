@@ -74,6 +74,8 @@ NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'maksimr/vim-jsbeautify'
 " Golang
 NeoBundle 'fatih/vim-go'
+" Dart
+NeoBundle 'dart-lang/dart-vim-plugin'
 
 NeoBundle 'Shougo/unite.vim'
 " Git
@@ -86,7 +88,7 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'croaker/mustang-vim'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'w0ng/vim-hybrid'
-
+NeoBundle 'dart-lang/dart-vim-plugin'
 NeoBundle 'cohama/agit.vim'
 
 call neobundle#end()
@@ -158,6 +160,8 @@ set shiftwidth=2
 set smarttab
 " カーソルを行頭、行末で止まらないようにする
 set whichwrap=b,s,h,l,<,>,[,]
+" showbreaks
+set showbreak=↪
 " 行番号の色
 highlight LineNr ctermfg=darkyellow
 " 60桁目の色
@@ -180,6 +184,31 @@ endif
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
+
+" 入力モードでのカーソル移動
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+
+" 日本語入力がオンのままでも使えるコマンド(Enterキーは必要)
+nnoremap あ a
+nnoremap い i
+nnoremap う u
+nnoremap お o
+nnoremap っd dd
+nnoremap っy yy
+
+" ""の中身を変更する
+nnoremap し” ci"
+" ''の中身を変更する
+nnoremap し’ ci'
+
+" jjでエスケープ
+inoremap <silent> jj <ESC>
+
+" 日本語入力で”っj”と入力してもEnterキーで確定させればインサートモードを抜ける
+inoremap <silent> っj <ESC>
 
 """"""""""""""""""""""""""""""
 " 自動的に閉じ括弧を入力
