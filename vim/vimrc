@@ -79,24 +79,23 @@ NeoBundle 'dart-lang/dart-vim-plugin'
 
 NeoBundle 'Shougo/unite.vim'
 " Git
+NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kmnk/vim-unite-giti.git'
+NeoBundle 'cohama/agit.vim'
 " color scheme
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'croaker/mustang-vim'
 NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'w0ng/vim-hybrid'
-NeoBundle 'dart-lang/dart-vim-plugin'
-NeoBundle 'cohama/agit.vim'
+" NeoBundle 'w0ng/vim-hybrid'
 
 call neobundle#end()
 
 
 filetype plugin indent on     " required!
 filetype indent on
-syntax on
 
 NeoBundleCheck
 
@@ -104,7 +103,7 @@ NeoBundleCheck
 "----------------------------------------------------
 " 各種設定
 "----------------------------------------------------
-syntax on
+syntax enable
 
 " Windowsキーマッピング
 source $VIMRUNTIME/mswin.vim
@@ -167,12 +166,94 @@ highlight LineNr ctermfg=darkyellow
 " 60桁目の色
 set colorcolumn=60
 " solarizeのメニュー表示
-" let g:solarized_menu=0
-" colorscheme solarized
-"let g:hybrid_custom_term_colors = 1
+let g:solarized_menu=0
 set background=dark
-colorscheme hybrid
-let g:hybrid_reduced_contrast = 1 " Remove this line if using the default palette.
+" gitgutter
+let g:gitgutter_sign_removed = '-'
+" lightline
+let g:lightline = {
+        \ 'colorscheme': 'solarized',
+        \ 'mode_map': {'c': 'NORMAL'},
+        \ 'active': {
+        \   'left': [
+        \     ['mode', 'paste'],
+        \     ['fugitive', 'gitgutter', 'filename'],
+        \   ],
+        \   'right': [
+        \     ['lineinfo', 'syntastic'],
+        \     ['percent'],
+        \     ['charcode', 'fileformat', 'fileencoding', 'filetype'],
+        \   ]
+        \ },
+        \ 'component_function': {
+        \   'modified': 'MyModified',
+        \   'readonly': 'MyReadonly',
+        \   'fugitive': 'MyFugitive',
+        \   'filename': 'MyFilename',
+        \   'fileformat': 'MyFileformat',
+        \   'filetype': 'MyFiletype',
+        \   'fileencoding': 'MyFileencoding',
+        \   'mode': 'MyMode',
+        \   'syntastic': 'SyntasticStatuslineFlag',
+        \   'charcode': 'MyCharCode',
+        \   'gitgutter': 'MyGitGutter',
+        \ }
+        \ }
+
+function! MyModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &ro ? ' ' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? substitute(b:vimshell.current_dir,expand('~'),'~','') :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+
+function! MyFileformat()
+  return winwidth('.') > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth('.') > 60 ? lightline#mode() : ''
+endfunction
+
+function! MyGitGutter()
+  if ! exists('*GitGutterGetHunkSummary')
+        \ || ! get(g:, 'gitgutter_enabled', 0)
+        \ || winwidth('.') <= 90
+    return ''
+  endif
+  let symbols = [
+        \ g:gitgutter_sign_added . ' ',
+        \ g:gitgutter_sign_modified . ' ',
+        \ g:gitgutter_sign_removed . ' '
+        \ ]
+  let hunks = GitGutterGetHunkSummary()
+  let ret = []
+  for i in [0, 1, 2]
+    if hunks[i] > 0
+      call add(ret, symbols[i] . hunks[i])
+    endif
+  endfor
+  return join(ret, ' ')
+endfunction
 " previm
 au BufRead,BufNewFile *.md set filetype=markdown
 if has('mac')
