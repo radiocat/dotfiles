@@ -23,6 +23,8 @@ endif
 "----------------------------------------------------
 " Neobundle
 "---------------------------------------------------
+let g:vimproc#download_windows_dll = 1
+
 if 0 | endif
 
 filetype off
