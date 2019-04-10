@@ -28,6 +28,22 @@ $ curl -fsSLO https://raw.githubusercontent.com/altercation/vim-colors-solarized
 $ echo "test -r ~/.bashrc && . ~/.bashrc" >> ~/.bash_profile
 ```
 
+## zshの設定
+
+* zsh `brew install zsh`
+* oh-my-zsh https://github.com/robbyrussell/oh-my-zsh
+* oh-my-zsh が作成した `.zshrc` に追加
+
+```bash
+$ cat zsh/zshrc.additional >> ~/.zshrc
+```
+
+↓を参考にテーマの書き換え
+https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+
+```
+ ZSH_THEME="gnzh"
+```
 
 ## .gitconfigについて
 

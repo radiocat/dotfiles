@@ -1,0 +1,5 @@
+# alias
+alias ls='ls -F'
+alias ll='ls -l'
+alias la='ls -lag'
+
