@@ -121,10 +121,16 @@ if (!(Test-Path $initVimPath)) {
 
 # 4. PowerShell Profile (新規作成する場合)
 # リポジトリ内にまだファイルがないため、存在確認してからリンクします
-$psProfileDir = "$HOME\Documents\PowerShell"
-if (!(Test-Path $psProfileDir)) { New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null }
-$repoProfile = "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1"
-$targetProfile = "$psProfileDir\Microsoft.PowerShell_profile.ps1"
+# $PROFILE 変数から正しいパス（CurrentUserAllHostsなど）を取得
+# 通常は ...\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 です
+$targetProfile = $PROFILE.CurrentUserAllHosts
+$psProfileDir = Split-Path $targetProfile -Parent
+
+# ディレクトリがなければ作成
+if (!(Test-Path $psProfileDir)) {
+    New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null
+    Write-Host "Created: $psProfileDir"
+}
 
 if (Test-Path $repoProfile) {
     New-SymLink -Target $repoProfile -Link $targetProfile
