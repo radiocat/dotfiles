@@ -337,7 +337,7 @@ au BufRead,BufNewFile *.md set filetype=markdown
 if has('mac')
   let g:previm_open_cmd = 'open -a Google\ Chrome'
 elseif has('win32')
-  let g:previm_open_cmd = 'C:\\Program\ Files\ (x86)\\Google\\Chrome\\Application\\chrome.exe'
+  let g:previm_open_cmd = 'start chrome'
 endif
 " open-browser
 let g:netrw_nogx = 1 " disable netrw's gx mapping.
