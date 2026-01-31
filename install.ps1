@@ -121,6 +121,8 @@ if (!(Test-Path $initVimPath)) {
 
 # 4. PowerShell Profile (新規作成する場合)
 # リポジトリ内にまだファイルがないため、存在確認してからリンクします
+$repoProfile = "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1"
+
 # $PROFILE 変数から正しいパス（CurrentUserAllHostsなど）を取得
 # 通常は ...\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 です
 $targetProfile = $PROFILE.CurrentUserAllHosts
