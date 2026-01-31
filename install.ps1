@@ -103,10 +103,15 @@ New-SymLink -Target "$dotfilesDir\.gitconfig" -Link "$HOME\.gitconfig"
 # 2. Vim (Classic)
 New-SymLink -Target "$dotfilesDir\vim\vimrc" -Link "$HOME\.vimrc"
 New-SymLink -Target "$dotfilesDir\vim\gvimrc" -Link "$HOME\.gvimrc"
-# .vim ディレクトリのリンク (プラグイン等)
-# 注意: Windowsでは $HOME\vimfiles が標準だが、.vim も認識される場合が多い
-New-SymLink -Target "$dotfilesDir\.vim" -Link "$HOME\.vim" 
-# setup.bat にあった vimfiles へのリンクも維持
+
+# .vim ディレクトリの準備 (リポジトリには含まれないため、なければ作成する)
+$vimDir = "$HOME\.vim"
+if (!(Test-Path $vimDir)) {
+    New-Item -ItemType Directory -Path $vimDir -Force | Out-Null
+    Write-Host "Created: $vimDir"
+}
+
+# setup.bat にあった vimfiles へのリンク (Windows互換用)
 New-SymLink -Target "$HOME\.vim" -Link "$HOME\vimfiles"
 
 # 3. Neovim (Modern)
