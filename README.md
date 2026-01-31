@@ -3,6 +3,16 @@
 
 ## 事前にインストールするもの
 
+* Git
+
+Windows環境
+
+```
+winget install --id Git.Git -e --source winget
+```
+
+
+
 * Vim本体
 * NeoBundle https://github.com/Shougo/neobundle.vim#1-install-neobundle
 
