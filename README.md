@@ -5,13 +5,29 @@
 
 * Git
 
-Windows環境
+### Windows環境
 
 ```
 winget install --id Git.Git -e --source winget
 ```
 
+## セットアップ
 
+### Windows環境
+
+```
+# ホームディレクトリへ移動
+cd $HOME
+
+# リポジトリをClone
+git clone https://github.com/radiocat/dotfiles.git
+
+# セットアップスクリプトを実行（ポリシーを一時的に許可して実行）
+Set-ExecutionPolicy RemoteSigned -Scope Process -Force; ./dotfiles/install.ps1
+```
+
+
+## 以下は今後修正予定
 
 * Vim本体
 * NeoBundle https://github.com/Shougo/neobundle.vim#1-install-neobundle
