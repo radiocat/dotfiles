@@ -21,6 +21,17 @@ if exists('&ambiwidth')
 endif
 
 " ---------------------------------------------------
+" Dein.vim Auto Install
+" ---------------------------------------------------
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+if !isdirectory(s:dein_repo_dir)
+  execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+endif
+set runtimepath^=~/.cache/dein/repos/github.com/Shougo/dein.vim
+
+" ---------------------------------------------------
 " Dein
 " ---------------------------------------------------
 if &compatible
