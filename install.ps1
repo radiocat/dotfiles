@@ -23,6 +23,7 @@ Write-Host "`n[1/3] Installing Modern Tools via Winget..." -ForegroundColor Gree
 
 # インストールするパッケージリスト
 # IDは変更される可能性があるため、必要に応じて `winget search` で確認してください
+
 $packages = @(
     # Core Tools
     @{Id = "Microsoft.PowerShell"; Name = "PowerShell 7"},
@@ -39,7 +40,8 @@ $packages = @(
 
     # Applications
     @{Id = "Google.Chrome"; Name = "Google Chrome"},
-    @{Id = "Google.JapaneseIME"; Name = "Google Japanese Input"}
+    @{Id = "Google.JapaneseIME"; Name = "Google Japanese Input"},
+    @{Id = "Obsidian.Obsidian"; Name = "Obsidian"}
 )
 
 foreach ($pkg in $packages) {
@@ -94,6 +96,21 @@ function New-SymLink {
     New-Item -ItemType SymbolicLink -Path $Link -Target $Target | Out-Null
     Write-Host "Linked: $Link -> $Target" -ForegroundColor Cyan
 }
+
+# --- 5. Pythonライブラリのセットアップ (AI活用用) ---
+Write-Host "`n[4/4] Setting up Python Libraries for AI..." -ForegroundColor Green
+try {
+    # pipのアップグレードとGemini用ライブラリのインストール
+    # --user オプションを使ってユーザー環境にインストールします
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade google-generativeai
+    Write-Host "Python libraries installed successfully."
+}
+catch {
+    Write-Warning "Failed to install Python libraries. Please run 'pip install google-generativeai' manually after restarting."
+}
+
+Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
 
 # --- リンク定義 ---
 
