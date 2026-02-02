@@ -9,13 +9,18 @@ Set-Alias ll ls
 # 使用法: 
 #   gemini "質問内容"
 #   Get-Content note.md | gemini "これを要約して"
+# --- Gemini CLI Function ---
 function gemini {
     $scriptPath = "$HOME\dotfiles\scripts\gemini.py"
-    # Pythonスクリプトに引数とパイプ入力を渡す
-    if ($input.MoveNext()) {
-        $input.Reset()
-        $input | python $scriptPath $args
+    
+    # $input を配列として確保（これによりパイプ入力の有無を確実に判定します）
+    $data = @($input)
+
+    if ($data.Count -gt 0) {
+        # パイプ入力がある場合
+        $data | python $scriptPath $args
     } else {
+        # 引数のみの場合
         python $scriptPath $args
     }
 }
