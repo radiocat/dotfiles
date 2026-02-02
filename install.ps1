@@ -18,12 +18,18 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 Write-Host "=== Windows Environment Setup Started ===" -ForegroundColor Cyan
 
+# --- Wingetソースの更新 ---
+Write-Host "`n[0/4] Updating Winget Sources..." -ForegroundColor Green
+try {
+    winget source update
+} catch {
+    Write-Warning "Winget source update failed. Continuing anyway..."
+}
+
 # --- 2. モダンツールのインストール (Winget) ---
-Write-Host "`n[1/3] Installing Modern Tools via Winget..." -ForegroundColor Green
+Write-Host "`n[1/4] Installing Modern Tools via Winget..." -ForegroundColor Green
 
 # インストールするパッケージリスト
-# IDは変更される可能性があるため、必要に応じて `winget search` で確認してください
-
 $packages = @(
     # Core Tools
     @{Id = "Microsoft.PowerShell"; Name = "PowerShell 7"},
@@ -34,7 +40,7 @@ $packages = @(
     # Dev Tools
     @{Id = "GitHub.cli"; Name = "GitHub CLI"},
     @{Id = "Python.Python.3"; Name = "Python 3"},
-    @{Id = "Ag.Ag"; Name = "The Silver Searcher (ag)"}, 
+    @{Id = "JFLarvoire.Ag"; Name = "The Silver Searcher (ag)"},
     @{Id = "BurntSushi.RipGrep.MSVC"; Name = "Ripgrep (rg)"},
     @{Id = "Microsoft.VisualStudioCode"; Name = "Visual Studio Code"},
 
@@ -56,7 +62,7 @@ foreach ($pkg in $packages) {
 }
 
 # --- 3. ディレクトリ構造の準備 ---
-Write-Host "`n[2/3] Preparing Directories..." -ForegroundColor Green
+Write-Host "`n[2/4] Preparing Directories..." -ForegroundColor Green
 
 $dotfilesDir = "$HOME\dotfiles"
 $configDir = "$HOME\AppData\Local"
@@ -69,7 +75,7 @@ if (!(Test-Path $nvimDir)) {
 }
 
 # --- 4. シンボリックリンクの作成 ---
-Write-Host "`n[3/3] Linking Configuration Files..." -ForegroundColor Green
+Write-Host "`n[3/4] Linking Configuration Files..." -ForegroundColor Green
 
 # リンク作成用ヘルパー関数
 function New-SymLink {
@@ -100,14 +106,18 @@ function New-SymLink {
 # --- 5. Pythonライブラリのセットアップ (AI活用用) ---
 Write-Host "`n[4/4] Setting up Python Libraries for AI..." -ForegroundColor Green
 try {
-    # pipのアップグレードとGemini用ライブラリのインストール
-    # --user オプションを使ってユーザー環境にインストールします
+    # pipのアップグレード
     python -m pip install --upgrade pip
-    python -m pip install --upgrade google-generativeai
+    
+    # 旧ライブラリの削除と新ライブラリ(google-genai)のインストール
+    Write-Host "Installing/Updating google-genai package..."
+    python -m pip uninstall -y google-generativeai
+    python -m pip install --upgrade google-genai
+    
     Write-Host "Python libraries installed successfully."
 }
 catch {
-    Write-Warning "Failed to install Python libraries. Please run 'pip install google-generativeai' manually after restarting."
+    Write-Warning "Failed to install Python libraries. Please run 'pip install google-genai' manually."
 }
 
 Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
@@ -121,19 +131,15 @@ New-SymLink -Target "$dotfilesDir\.gitconfig" -Link "$HOME\.gitconfig"
 New-SymLink -Target "$dotfilesDir\vim\vimrc" -Link "$HOME\.vimrc"
 New-SymLink -Target "$dotfilesDir\vim\gvimrc" -Link "$HOME\.gvimrc"
 
-# .vim ディレクトリの準備 (リポジトリには含まれないため、なければ作成する)
+# .vim ディレクトリの準備
 $vimDir = "$HOME\.vim"
 if (!(Test-Path $vimDir)) {
     New-Item -ItemType Directory -Path $vimDir -Force | Out-Null
     Write-Host "Created: $vimDir"
 }
-
-# setup.bat にあった vimfiles へのリンク (Windows互換用)
 New-SymLink -Target "$HOME\.vim" -Link "$HOME\vimfiles"
 
 # 3. Neovim (Modern)
-# 既存の vimrc を Neovim の init.vim として読み込ませることで設定を共有
-# 将来的には init.lua へ移行推奨ですが、まずは既存資産を活かします
 $initVimContent = "set runtimepath^=~/.vim runtimepath+=~/.vim/after`nlet &packpath = &runtimepath`nsource ~/.vimrc"
 $initVimPath = "$nvimDir\init.vim"
 if (!(Test-Path $initVimPath)) {
@@ -141,16 +147,11 @@ if (!(Test-Path $initVimPath)) {
     Write-Host "Created: Neovim compatibility shim at $initVimPath" -ForegroundColor Cyan
 }
 
-# 4. PowerShell Profile (新規作成する場合)
-# リポジトリ内にまだファイルがないため、存在確認してからリンクします
+# 4. PowerShell Profile
 $repoProfile = "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1"
-
-# $PROFILE 変数から正しいパス（CurrentUserAllHostsなど）を取得
-# 通常は ...\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 です
 $targetProfile = $PROFILE.CurrentUserAllHosts
 $psProfileDir = Split-Path $targetProfile -Parent
 
-# ディレクトリがなければ作成
 if (!(Test-Path $psProfileDir)) {
     New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null
     Write-Host "Created: $psProfileDir"
@@ -160,9 +161,7 @@ if (Test-Path $repoProfile) {
     New-SymLink -Target $repoProfile -Link $targetProfile
 } else {
     Write-Warning "PowerShell profile not found in dotfiles. Skipping link."
-    Write-Warning "Planned path: $repoProfile"
 }
 
 Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
 Write-Host "Please restart your terminal to apply changes."
-Write-Host "Note: Google Japanese Input may require a system restart to activate."
