@@ -63,13 +63,12 @@ Set-ExecutionPolicy RemoteSigned -Scope Process -Force; ./dotfiles/install.ps1
 
 ## 🤖 AI機能の使い方
 
-`gemini` コマンドで、ターミナルから直接 AI に質問したり、テキスト処理を行えます。
+自作の `genai` コマンドでパイプライン処理を、公式の `gemini` コマンドで対話型AIを利用できます。
 
-### 基本的な使い方
+### 基本的な使い方 (自作ツール)
 
 ```powershell
-gemini "PowerShellで空のファイルを作成するコマンドは？"
-
+genai "PowerShellで空のファイルを作成するコマンドは？"
 ```
 
 ### Obsidian との連携（応用）
@@ -78,10 +77,10 @@ gemini "PowerShellで空のファイルを作成するコマンドは？"
 
 ```powershell
 # 議事録を要約して Obsidian の Inbox に保存する
-Get-Content ./meeting_log.txt | gemini "この議事録のToDoを抽出してMarkdownリストにして" >> "$HOME\Documents\ObsidianVault\Inbox\ToDo.md"
+Get-Content ./meeting_log.txt | genai "この議事録のToDoを抽出してMarkdownリストにして" >> "$HOME\Documents\ObsidianVault\Inbox\ToDo.md"
 
 # クリップボードの内容を校正する
-Get-Clipboard | gemini "この文章をビジネスメールとして適切な敬語に直して"
+Get-Clipboard | genai "この文章をビジネスメールとして適切な敬語に直して"
 
 ```
 

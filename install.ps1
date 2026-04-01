@@ -43,6 +43,7 @@ $packages = @(
     @{Id = "JFLarvoire.Ag"; Name = "The Silver Searcher (ag)"},
     @{Id = "BurntSushi.RipGrep.MSVC"; Name = "Ripgrep (rg)"},
     @{Id = "Microsoft.VisualStudioCode"; Name = "Visual Studio Code"},
+    @{Id = "OpenJS.NodeJS"; Name = "Node.js"},
 
     # Applications
     @{Id = "Google.Chrome"; Name = "Google Chrome"},
@@ -161,6 +162,17 @@ if (Test-Path $repoProfile) {
     New-SymLink -Target $repoProfile -Link $targetProfile
 } else {
     Write-Warning "PowerShell profile not found in dotfiles. Skipping link."
+}
+
+# --- 5. 公式Gemini CLIのインストール ---
+Write-Host "`n[5/5] Installing Official Gemini CLI..." -ForegroundColor Green
+try {
+    # npmを使ってグローバルにインストール
+    npm install -g @google/gemini-cli
+    Write-Host "Official Gemini CLI installed successfully."
+}
+catch {
+    Write-Warning "Failed to install Official Gemini CLI. Please run 'npm install -g @google/gemini-cli' manually after restarting the terminal."
 }
 
 Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
