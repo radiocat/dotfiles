@@ -5,22 +5,20 @@ Invoke-Expression (&starship init powershell)
 Set-Alias vim nvim
 Set-Alias ll ls
 
-# --- Gemini CLI Function ---
+# --- GenAI CLI Function ---
 # 使用法: 
-#   gemini "質問内容"
-#   Get-Content note.md | gemini "これを要約して"
-# --- Gemini CLI Function ---
-function gemini {
-    $scriptPath = "$HOME\dotfiles\scripts\gemini.py"
+#   genai "質問内容"
+#   Get-Content note.md | genai "これを要約して"
+# --- GenAI CLI Function ---
+function genai {
+    # 呼び出し先のファイル名を genai.py に変更
+    $scriptPath = "$HOME\dotfiles\scripts\genai.py"
     
-    # $input を配列として確保（これによりパイプ入力の有無を確実に判定します）
     $data = @($input)
 
     if ($data.Count -gt 0) {
-        # パイプ入力がある場合
         $data | python $scriptPath $args
     } else {
-        # 引数のみの場合
         python $scriptPath $args
     }
 }
