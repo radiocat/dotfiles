@@ -225,6 +225,16 @@ export OBSIDIAN_VAULT_PATH="/mnt/c/Users/yourname/Documents/ObsidianVault"
 ### 🍎 macOS
 支給されたMacBookでは、`setup.sh` を実行するだけでWSL2と全く同じエイリアス、AIスクリプトが利用可能になります。
 
+### git の環境設定
+
+`.gitconfig.local` をホームディレクトリにコピー
+
+```bash
+cp .gitconfig.local $HOME/
+```
+
+自分の環境に合わせて設定内容を更新
+
 ---
 
 ## 🤖 EM-Ops 機能の使い方
