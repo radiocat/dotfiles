@@ -1,0 +1,37 @@
+# Path
+export DOTFILES_DIR="$HOME/dotfiles"
+export PATH="$DOTFILES_DIR/scripts:$PATH"
+
+# Load Secret Env
+if [ -f "$DOTFILES_DIR/.env.local" ]; then
+    source "$DOTFILES_DIR/.env.local"
+fi
+
+# Starship Prompt
+eval "$(starship init zsh)"
+
+# Aliases
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+
+alias ls='ls -F'
+alias ll='ls -l'
+alias la='ls -lag'
+
+# ObsidianのノートをAIで要約するエイリアス例
+alias genai-sum='python3 $DOTFILES_DIR/scripts/genai.py'
+
+# OS固有の設定
+if [[ "$(uname)" == "Darwin" ]]; then
+    # Mac用の設定
+    alias obsidian='open "obsidian://open?vault=..." '
+else
+    # WSL2用の設定
+    # Todo:Windows側のObsidian Vaultへのパス
+    export VAULT_PATH="/mnt/c/Users/YourName/Documents/ObsidianVault"
+fi
+
+# fzf integration
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
