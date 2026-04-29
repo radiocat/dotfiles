@@ -20,18 +20,20 @@ alias ls='ls -F'
 alias ll='ls -l'
 alias la='ls -lag'
 
-# ObsidianのノートをAIで要約するエイリアス例
-alias genai-sum='python3 $DOTFILES_DIR/scripts/genai.py'
-
-# OS固有の設定
-if [[ "$(uname)" == "Darwin" ]]; then
-    # Mac用の設定
-    alias obsidian='open "obsidian://open?vault=..." '
-else
-    # WSL2用の設定
-    # Todo:Windows側のObsidian Vaultへのパス
-    export VAULT_PATH="/mnt/c/Users/YourName/Documents/ObsidianVault"
+# エイリアスや追加パスの設定は、変数が存在する場合のみ行う
+if [ -n "$OBSIDIAN_VAULT_PATH" ]; then
+    # 例：Vaultディレクトリへの移動エイリアス
+    alias cdv='cd "$OBSIDIAN_VAULT_PATH"'
+    
+    # OS別のObsidian起動用エイリアス
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # Mac: obsidian:// プロトコルを使用
+        alias ob='open "obsidian://open?path=$(python3 -c "import urllib.parse; print(urllib.parse.quote(\"'$OBSIDIAN_VAULT_PATH'\"))")"'
+    fi
 fi
+
+export PATH="$DOTFILES_DIR/scripts:$PATH"
+alias genai='python3 $DOTFILES_DIR/scripts/genai.py'
 
 # fzf integration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

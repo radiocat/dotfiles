@@ -86,46 +86,6 @@ Get-Clipboard | genai "この文章をビジネスメールとして適切な敬
 
 ---
 
-## 🍎 macOS / 🐧 Linux 環境のセットアップ
-
-従来の手順も利用可能です。
-
-```bash
-cd ~
-git clone [https://github.com/radiocat/dotfiles.git](https://github.com/radiocat/dotfiles.git)
-cd dotfiles
-./setup.sh
-
-```
-
----
-
-## 📁 ディレクトリ構成
-
-* `windows/`: Windows 用設定ファイル (PowerShell プロファイル等)
-* `scripts/`: クロスプラットフォーム用スクリプト (Gemini CLI 等)
-* `vim/`: Vim / Neovim 共通設定
-* `zsh/`, `bash/`: シェル設定 (Mac/Linux用)
-* `install.ps1`: Windows 用インストーラー
-* `setup.sh`: Mac/Linux 用インストーラー
-
-
-
----
-
-# EM-Ops: Dotfiles for Modern Technical Orchestrator
-
-エンジニアリングマネージャー（EM）の業務をエンジニアリング視点でハックし、生産性を最大化するための設定ファイル群です。
-Windows (WSL2), macOS, Chromebook のマルチプラットフォームに対応し、AIエージェントとObsidianを統合した「第二の脳」を構築します。
-
-## 💡 コンセプト：EM-Ops
-- **Logic vs. Data:** マネジメントの「型（プロンプトやスクリプト）」をコード管理し、機密データと完全に分離。
-- **AI-Driven Management:** Gemini CLIやMCPサーバーを活用し、1on1準備やドキュメント作成を自動化。
-- **Obsidian Connectivity:** ローカルの知識ベースをAIに接続し、構造化された意思決定を支援。
-
----
-
-
 ## 🪟 Windows (WSL2) での準備手順
 
 まずはLinuxサブシステム（WSL2）を有効化し、その中でこのdotfilesを展開します。
@@ -186,6 +146,43 @@ export OBSIDIAN_VAULT_PATH="/mnt/c/Users/yourname/Documents/ObsidianVault"
 - **設定ファイル(dotfiles):** WSL2の `~/` 直下で管理（爆速・安定）。
 - **業務ドキュメント(Obsidian):** Windows側のフォルダで管理（iCloud/Google Drive同期やGUIアプリとの親和性）。
 AI（Gemini CLI）はこの2つの世界を `/mnt/c/` 経由で繋ぎます。
+
+---
+
+## 🍎 macOS / 🐧 Linux 環境のセットアップ
+
+従来の手順も利用可能です。
+
+```bash
+cd ~
+git clone [https://github.com/radiocat/dotfiles.git](https://github.com/radiocat/dotfiles.git)
+cd dotfiles
+./setup.sh
+
+```
+
+---
+
+## 📁 ディレクトリ構成
+
+* `windows/`: Windows 用設定ファイル (PowerShell プロファイル等)
+* `scripts/`: クロスプラットフォーム用スクリプト (Gemini CLI 等)
+* `vim/`: Vim / Neovim 共通設定
+* `zsh/`, `bash/`: シェル設定 (Mac/Linux用)
+* `install.ps1`: Windows 用インストーラー
+* `setup.sh`: Mac/Linux 用インストーラー
+
+---
+
+# EM-Ops: Dotfiles for Modern Technical Orchestrator
+
+エンジニアリングマネージャー（EM）の業務をエンジニアリング視点でハックし、生産性を最大化するための設定ファイル群です。
+Windows (WSL2), macOS, Chromebook のマルチプラットフォームに対応し、AIエージェントとObsidianを統合した「第二の脳」を構築します。
+
+## 💡 コンセプト：EM-Ops
+- **Logic vs. Data:** マネジメントの「型（プロンプトやスクリプト）」をコード管理し、機密データと完全に分離。
+- **AI-Driven Management:** Gemini CLIやMCPサーバーを活用し、1on1準備やドキュメント作成を自動化。
+- **Obsidian Connectivity:** ローカルの知識ベースをAIに接続し、構造化された意思決定を支援。
 
 ---
 
