@@ -1,6 +1,3 @@
-# Tap
-tap "homebrew/bundle"
-
 # Common CLI Tools
 brew "git"
 brew "zsh"
