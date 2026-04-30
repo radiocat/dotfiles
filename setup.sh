@@ -40,4 +40,9 @@ if [ ! -f "$DOTFILES_DIR/.env.local" ]; then
     echo "Created .env.local. Please fill in your Gemini API Key."
 fi
 
+if [ ! -f "$HOME/.gitconfig.local" ]; then
+    cp "$DOTFILES_DIR/git/.gitconfig.local" "$HOME/.gitconfig.local"
+    echo "Created .gitconfig.local. Please fill in your Git credentials."
+fi
+
 echo "Setup completed! Please restart your shell."
