@@ -104,12 +104,13 @@ wsl --install
 ### 2. WSL2 内での Git 設定
 
 WSL2のターミナル（Ubuntu）が起動したら、Linux側でリポジトリを管理するために Git を準備します。
+シェルをbashからzshに変更するためにzshも同時にインストールします。
 
 ```bash
-sudo apt update && sudo apt install -y git
+sudo apt update && sudo apt install -y git zsh
 ```
 
-### 3. リポジトリのクローンと実行
+### 3. リポジトリのクローンとセットアップ実行
 
 **重要:** パフォーマンスと権限の問題を避けるため、Windows側（`/mnt/c/`）ではなく、**WSL2のホームディレクトリ（`~/`）直下**にクローンしてください。
 
@@ -119,6 +120,14 @@ git clone https://github.com/radiocat/dotfiles.git
 cd dotfiles
 chmod +x setup.sh
 ./setup.sh
+```
+
+デフォルトシェルの変更
+
+セットアップ完了後、以下のコマンドで `zsh` をデフォルトに設定し、ターミナルを再起動してください。
+
+```bash
+chsh -s $(which zsh)
 ```
 
 ### 4. Windows側の Obsidian Vault との紐付け
@@ -163,15 +172,9 @@ AI（Gemini CLI）はこの2つの世界を `/mnt/c/` 経由で繋ぎます。
 ./setup.sh
 ```
 
-※ setup.sh により、Homebrew、Oh My Zsh、および Brewfile に記載されたツールが自動インストールされます。
+※ setup.sh により、Homebrew、Brewfile に記載されたツールが自動インストールされます。
 
-2. Zsh フレームワーク (Oh My Zsh)
-
-本環境では、プラグイン管理に Oh My Zsh を、プロンプトに Starship を採用しています。
-
-- プラグイン: zsh/zshrc の plugins=(...) セクションでカスタマイズ可能です。
 - テーマ: Starship により、OSを問わず高速でモダンなプロンプトが表示されます。
-
 
 ---
 

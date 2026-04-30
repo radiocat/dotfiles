@@ -1,11 +1,15 @@
-# Common CLI Tools
-brew "git"
+# Shell & Appearance
 brew "zsh"
-brew "fzf"         # 高速検索
-brew "ripgrep"     # 高速grep (Obsidian内の検索等に有用)
-brew "gh"          # GitHub CLI
-brew "python@3.11"
-brew "starship"    # モダンなプロンプト
+brew "starship"
+brew "fzf"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
-# AI Tools
-# brew "ollama"    # ローカルLLMを使いたい場合（WSL2/Mac両対応）
+# Dev Tools
+brew "git"
+brew "ripgrep"
+brew "gh"
+brew "python@3.11"
+
+# AI & Others
+# brew "ollama" # 必要に応じて有効化
