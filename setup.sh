@@ -53,6 +53,25 @@ fi
 # scriptsへの実行権限付与
 chmod +x "$DOTFILES_DIR/scripts/"*.py
 
+# --- Python venv と AIライブラリのセットアップ ---
+echo "Setting up Python virtual environment..."
+# デフォルトの .venv を作成
+if [ ! -d "$DOTFILES_DIR/.venv" ]; then
+    python3 -m venv "$DOTFILES_DIR/.venv"
+fi
+# システム環境を汚染しないよう、仮想環境内の pip を使用してインストール
+"$DOTFILES_DIR/.venv/bin/pip" install --upgrade pip
+"$DOTFILES_DIR/.venv/bin/pip" install --upgrade google-genai
+
+# --- 公式Gemini CLIのインストール ---
+echo "Installing Official Gemini CLI..."
+# Brewfileでインストールされたnpmを使ってグローバルインストール
+if command -v npm &> /dev/null; then
+    npm install -g @google/gemini-cli
+else
+    echo "⚠️ npm is not found. Please check your Homebrew installation."
+fi
+
 # 秘匿情報ファイルの作成（存在しない場合のみ）
 if [ ! -f "$DOTFILES_DIR/.env.local" ]; then
     cp "$DOTFILES_DIR/.env.local.example" "$DOTFILES_DIR/.env.local"
