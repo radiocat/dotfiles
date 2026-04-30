@@ -6,29 +6,43 @@ add_newline = true
 
 # ref https://github.com/starship/starship/discussions/1107?sort=top#discussioncomment-10214050
 format = """
-[╭{owo} ](bold green)$username$directory$battery$all$line_break$character"""
+$username$directory$git_branch$git_status$python$custom$all$line_break$character"""
+
+[username]
+style_user = "yellow bold"
+style_root = "red bold"
+format = "[$user]($style) "
+disabled = false
+show_always = true
+
+[directory]
+style = "cyan bold"
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "🏠"
 
 [character]
-success_symbol = '[╰─>](bold green)'
-error_symbol = '[x >](bold red)'
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
 
 [git_branch]
-format = '[$symbol$branch(:$remote_branch) ]($style)'
+symbol = "🌱 "
+style = "bold purple"
+truncation_length = 20
+truncation_symbol = "…"
 
-# ref https://zenn.dev/link/comments/ced6da507bf16f
 [git_status]
-format = '$all_status$ahead_behind '
-conflicted = ''
-ahead = ''
-behind = ''
-diverged = ''
-up_to_date = '[✓](bold green)'
-untracked = ''
-stashed = ''
-modified = '🔥'
-staged = ''
-renamed = ''
-deleted = ''
+style = "bold red"
+ahead = "↑${count}"
+diverged = "↕↑${ahead_count}↓${behind_count}"
+behind = "↓${count}"
+conflicted = "CONFLICT"
+untracked = "UNTRACKED"
+stashed = "STASHED"
+modified = "MODIFIED"
+staged = "STAGED(${count})"
+renamed = "RENAMED"
+deleted = "DELETED"
 
 [python]
 symbol = "🐍 "
