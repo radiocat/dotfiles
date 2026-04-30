@@ -1,16 +1,35 @@
-# Path
+# --- パス設定 ---
 export DOTFILES_DIR="$HOME/dotfiles"
 export PATH="$DOTFILES_DIR/scripts:$PATH"
 
-# Load Secret Env
+# --- 秘匿情報・環境変数の読み込み (.env.local) ---
+# マシン固有のパス（OBSIDIAN_VAULT_PATHなど）やAPIキーはここから読み込む
 if [ -f "$DOTFILES_DIR/.env.local" ]; then
     source "$DOTFILES_DIR/.env.local"
 fi
 
-# Starship Prompt
-eval "$(starship init zsh)"
+# --- Oh My Zsh 設定 (復活・モダン統合版) ---
+export ZSH="$HOME/.oh-my-zsh"
 
-# Aliases
+# テーマは Starship を使用するため空欄にします。
+# 以前は 'gnzh' を使用していましたが、Starship により高速化とクロスプラットフォーム化を実現しています。
+ZSH_THEME=""
+
+# 便利プラグインの有効化
+plugins=(git common-aliases fzf extract)
+
+# Oh My Zsh の起動
+if [ -f $ZSH/oh-my-zsh.sh ]; then
+    source $ZSH/oh-my-zsh.sh
+fi
+
+# --- プロンプト設定 (Starship) ---
+# OMZ の後に読み込むことで、プロンプトを Starship で上書きします
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# --- エイリアス設定 ---
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
@@ -20,20 +39,24 @@ alias ls='ls -F'
 alias ll='ls -l'
 alias la='ls -lag'
 
-# エイリアスや追加パスの設定は、変数が存在する場合のみ行う
+# --- Obsidian 連携設定 ---
+# .env.local で OBSIDIAN_VAULT_PATH が定義されている場合のみ有効化
 if [ -n "$OBSIDIAN_VAULT_PATH" ]; then
-    # 例：Vaultディレクトリへの移動エイリアス
+    # Vaultディレクトリへの移動
     alias cdv='cd "$OBSIDIAN_VAULT_PATH"'
     
     # OS別のObsidian起動用エイリアス
     if [[ "$(uname)" == "Darwin" ]]; then
         # Mac: obsidian:// プロトコルを使用
         alias ob='open "obsidian://open?path=$(python3 -c "import urllib.parse; print(urllib.parse.quote(\"'$OBSIDIAN_VAULT_PATH'\"))")"'
+    elif [[ "$(uname)" == "Linux" && -d "/mnt/c" ]]; then
+        # WSL2: Windows側のObsidianを起動（パスの調整が必要な場合があります）
+        alias ob='powershell.exe Start "obsidian://open?path=$(python3 -c "import urllib.parse; print(urllib.parse.quote(\"'$OBSIDIAN_VAULT_PATH'\"))")"'
     fi
 fi
 
-export PATH="$DOTFILES_DIR/scripts:$PATH"
+# --- AIツール (genai.py) ---
 alias genai='python3 $DOTFILES_DIR/scripts/genai.py'
 
-# fzf integration
+# --- fzf インテグレーション ---
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

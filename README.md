@@ -157,15 +157,21 @@ AI（Gemini CLI）はこの2つの世界を `/mnt/c/` 経由で繋ぎます。
 
 ## 🍎 macOS / 🐧 Linux 環境のセットアップ
 
-従来の手順も利用可能です。
+1. セットアップの実行
 
 ```bash
-cd ~
-git clone [https://github.com/radiocat/dotfiles.git](https://github.com/radiocat/dotfiles.git)
-cd dotfiles
 ./setup.sh
-
 ```
+
+※ setup.sh により、Homebrew、Oh My Zsh、および Brewfile に記載されたツールが自動インストールされます。
+
+2. Zsh フレームワーク (Oh My Zsh)
+
+本環境では、プラグイン管理に Oh My Zsh を、プロンプトに Starship を採用しています。
+
+- プラグイン: zsh/zshrc の plugins=(...) セクションでカスタマイズ可能です。
+- テーマ: Starship により、OSを問わず高速でモダンなプロンプトが表示されます。
+
 
 ---
 
