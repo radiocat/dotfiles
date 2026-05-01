@@ -1,0 +1,8 @@
+# macOS GUI Applications (Casks)
+cask "iterm2"
+cask "google-japanese-ime"
+cask "karabiner-elements"
+cask "clipy"
+cask "scroll-reverser"
+cask "obsidian"
+cask "visual-studio-code"

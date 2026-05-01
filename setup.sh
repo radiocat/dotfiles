@@ -31,8 +31,18 @@ fi
 
 # Brewfileによるパッケージの一括インストール
 if [ -f "$DOTFILES_DIR/Brewfile" ]; then
-    echo "Installing packages from Brewfile..."
+    echo "Installing common tools from Brewfile..."
     brew bundle --file="$DOTFILES_DIR/Brewfile"
+
+    # OS判定によるMac専用アプリのインストール
+    if [ "$(uname)" == "Darwin" ]; then
+        echo "🍎 macOS detected. Installing GUI applications..."
+        if [ -f "$DOTFILES_DIR/Brewfile.macos" ]; then
+            brew bundle --file="$DOTFILES_DIR/Brewfile.macos"
+        fi
+    else
+        echo "🐧 Linux/WSL2 detected. Skipping GUI apps."
+    fi
 fi
 
 # シンボリックリンクの作成
