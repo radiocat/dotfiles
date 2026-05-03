@@ -47,14 +47,14 @@ fi
 
 # シンボリックリンクの作成
 echo "Creating symlinks..."
-# Neovim用設定ディレクトリの作成
-mkdir -p "$HOME/.config"
-
-# 既存の .vimrc リンクは残しつつ、メインを nvim に移行
 ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 
-# Neovim 設定ディレクトリ全体をリンク (init.lua 等が含まれる想定)
+# EditorConfigのグローバルリンクを追加
+ln -sf "$DOTFILES_DIR/.editorconfig" "$HOME/.editorconfig"
+
+# Neovim用設定
+mkdir -p "$HOME/.config"
 ln -sfn "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
 # (任意) 古い vimrc も一応同期させておく場合
