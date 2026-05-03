@@ -71,3 +71,4 @@ fi
 # AI Agent
 # 仮想環境（.venv）のPythonを使ってスクリプトを実行する
 alias genai='$DOTFILES_DIR/.venv/bin/python $DOTFILES_DIR/scripts/genai.py'
+

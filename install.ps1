@@ -76,33 +76,20 @@ if (!(Test-Path $nvimDir)) {
 }
 
 # --- 4. シンボリックリンクの作成 ---
-Write-Host "`n[3/4] Linking Configuration Files..." -ForegroundColor Green
+Write-Host "`n[3/4] Linking Configuration Files for Neovim..." -ForegroundColor Green
 
-# リンク作成用ヘルパー関数
-function New-SymLink {
-    param (
-        [string]$Target, # リンク先（実体）
-        [string]$Link    # リンクの作成場所
-    )
+# Neovim (Modern)
+# Windowsでは ~/AppData/Local/nvim に設定を置く
+$nvimTargetDir = "$HOME\AppData\Local\nvim"
 
-    if (Test-Path $Link) {
-        # 既にファイル/フォルダが存在する場合
-        $item = Get-Item $Link
-        if ($item.LinkType -eq "SymbolicLink") {
-            Write-Host "Skip: Link already exists [$Link]" -ForegroundColor Gray
-            return
-        } else {
-            # 実ファイルがある場合はバックアップを作成
-            $backup = "$Link.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
-            Rename-Item -Path $Link -NewName $backup
-            Write-Warning "Backup created: $Link -> $backup"
-        }
-    }
-
-    # シンボリックリンク作成
-    New-Item -ItemType SymbolicLink -Path $Link -Target $Target | Out-Null
-    Write-Host "Linked: $Link -> $Target" -ForegroundColor Cyan
+if (Test-Path $nvimTargetDir) {
+    # 既存のディレクトリがある場合はバックアップ
+    $backupNvim = "$nvimTargetDir.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+    Rename-Item -Path $nvimTargetDir -NewName $backupNvim
 }
+
+# dotfiles/nvim を直接 AppData/Local/nvim にリンク
+New-SymLink -Target "$dotfilesDir\nvim" -Link $nvimTargetDir
 
 # --- 5. Pythonライブラリのセットアップ (AI活用用) ---
 Write-Host "`n[4/4] Setting up Python Libraries for AI..." -ForegroundColor Green
