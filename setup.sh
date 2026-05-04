@@ -51,7 +51,7 @@ ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 ln -sf "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
 
 # EditorConfigのグローバルリンクを追加
-ln -sf "$DOTFILES_DIR/.editorconfig" "$HOME/.editorconfig"
+ln -sf "$DOTFILES_DIR/zsh/.editorconfig" "$HOME/.editorconfig"
 
 # Neovim用設定
 mkdir -p "$HOME/.config"
