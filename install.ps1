@@ -148,7 +148,7 @@ Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
 New-SymLink -Target "$dotfilesDir\zsh\.editorconfig" -Link "$HOME\.editorconfig"
 
 # 1. .gitconfig (共通)
-New-SymLink -Target "$dotfilesDir\.gitconfig" -Link "$HOME\.gitconfig"
+New-SymLink -Target "$dotfilesDir\git\.gitconfig" -Link "$HOME\.gitconfig"
 
 # 2. Vim (Classic)
 New-SymLink -Target "$dotfilesDir\vim\vimrc" -Link "$HOME\.vimrc"
