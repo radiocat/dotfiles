@@ -16,6 +16,38 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit 1
 }
 
+# リンク作成用ヘルパー関数 (バックアップ機能付き)
+function New-SymLink {
+    param (
+        [string]$Target, # リンク先（実体）
+        [string]$Link    # リンクの作成場所
+    )
+
+    if (Test-Path $Link) {
+        $item = Get-Item $Link
+        if ($item.LinkType -eq "SymbolicLink") {
+            Write-Host "Skip: Link already exists [$Link]" -ForegroundColor Gray
+            return
+        } else {
+            # 実体がある場合はバックアップ
+            $backup = "$Link.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+            Rename-Item -Path $Link -NewName $backup
+            Write-Warning "Backup created: $Link -> $backup"
+        }
+    }
+
+    # 親ディレクトリがない場合は作成
+    $parentDir = Split-Path $Link -Parent
+    if (!(Test-Path $parentDir)) {
+        New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
+    }
+
+    # シンボリックリンク作成
+    New-Item -ItemType SymbolicLink -Path $Link -Target $Target | Out-Null
+    Write-Host "Linked: $Link -> $Target" -ForegroundColor Cyan
+}
+
+
 Write-Host "=== Windows Environment Setup Started ===" -ForegroundColor Cyan
 
 # --- Wingetソースの更新 ---
