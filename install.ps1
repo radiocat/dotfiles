@@ -145,7 +145,7 @@ Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
 # --- リンク定義 ---
 
 # 既存のリンク定義に .editorconfig を追加
-New-SymLink -Target "$dotfilesDir\zsh\.editorconfig" -Link "$HOME\.editorconfig"
+New-SymLink -Target "$dotfilesDir\.editorconfig" -Link "$HOME\.editorconfig"
 
 # 1. .gitconfig (共通)
 New-SymLink -Target "$dotfilesDir\git\.gitconfig" -Link "$HOME\.gitconfig"
