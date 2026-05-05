@@ -2,34 +2,37 @@
 .SYNOPSIS
     Windows環境構築用セットアップスクリプト
 .DESCRIPTION
-    Wingetを使ったツールのインストールと設定ファイルのシンボリックリンク作成を行います。
+    Winget/NPM/Pipを使用したツールのインストールと、設定ファイルのシンボリックリンク作成を一括で行います。
     管理者権限で実行してください。
 #>
 
-# エラーが発生したら停止
+# エラー発生時に停止
 $ErrorActionPreference = "Stop"
 
 # --- 1. 管理者権限チェック ---
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Warning "このスクリプトは管理者権限で実行する必要があります。"
-    Write-Warning "PowerShellを「管理者として実行」してからやり直してください。"
+    Write-Warning "PowerShellを「管理者として実行」してから再度実行してください。"
     exit 1
 }
 
-# リンク作成用ヘルパー関数 (バックアップ機能付き)
+# --- 2. ヘルパー関数 ---
+
+# シンボリックリンク作成用 (バックアップ機能付き)
 function New-SymLink {
     param (
-        [string]$Target, # リンク先（実体）
-        [string]$Link    # リンクの作成場所
+        [Parameter(Mandatory=$true)][string]$Target, # リンク先（実体）
+        [Parameter(Mandatory=$true)][string]$Link    # リンクの作成場所
     )
 
     if (Test-Path $Link) {
         $item = Get-Item $Link
-        if ($item.LinkType -eq "SymbolicLink") {
+        # 既にシンボリックリンク（またはジャンクション）の場合はスキップ
+        if ($item.Attributes -match "ReparsePoint") {
             Write-Host "Skip: Link already exists [$Link]" -ForegroundColor Gray
             return
         } else {
-            # 実体がある場合はバックアップ
+            # 実体（ファイル/ディレクトリ）がある場合はバックアップ
             $backup = "$Link.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
             Rename-Item -Path $Link -NewName $backup
             Write-Warning "Backup created: $Link -> $backup"
@@ -42,26 +45,32 @@ function New-SymLink {
         New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
     }
 
+    # 実体（ターゲット）が存在するかチェック
+    if (!(Test-Path $Target)) {
+        Write-Warning "Target not found: $Target. Skipping link creation."
+        return
+    }
+
     # シンボリックリンク作成
     New-Item -ItemType SymbolicLink -Path $Link -Target $Target | Out-Null
     Write-Host "Linked: $Link -> $Target" -ForegroundColor Cyan
 }
 
-
+# --- 3. 初期設定 ---
 Write-Host "=== Windows Environment Setup Started ===" -ForegroundColor Cyan
 
-# --- Wingetソースの更新 ---
-Write-Host "`n[0/4] Updating Winget Sources..." -ForegroundColor Green
+$dotfilesDir = "$HOME\dotfiles"
+$configDir = "$HOME\AppData\Local"
+$totalSteps = 5
+
+# --- [1/5] モダンツールのインストール (Winget) ---
+Write-Host "`n[1/$totalSteps] Updating Winget and Installing Tools..." -ForegroundColor Green
 try {
     winget source update
 } catch {
-    Write-Warning "Winget source update failed. Continuing anyway..."
+    Write-Warning "Winget source update failed. Continuing..."
 }
 
-# --- 2. モダンツールのインストール (Winget) ---
-Write-Host "`n[1/4] Installing Modern Tools via Winget..." -ForegroundColor Green
-
-# インストールするパッケージリスト
 $packages = @(
     # Core Tools
     @{Id = "Microsoft.PowerShell"; Name = "PowerShell 7"},
@@ -86,116 +95,74 @@ $packages = @(
 foreach ($pkg in $packages) {
     Write-Host "Installing $($pkg.Name)..."
     try {
-        # 既にインストール済みかチェックしつつインストール/アップグレード
         winget install --id $pkg.Id -e --source winget --accept-package-agreements --accept-source-agreements
-    }
-    catch {
+    } catch {
         Write-Warning "Failed to install $($pkg.Name). You may need to install it manually."
     }
 }
 
-# --- 3. ディレクトリ構造の準備 ---
-Write-Host "`n[2/4] Preparing Directories..." -ForegroundColor Green
-
-$dotfilesDir = "$HOME\dotfiles"
-$configDir = "$HOME\AppData\Local"
-
-# Neovim用設定ディレクトリ
-$nvimDir = "$configDir\nvim"
-if (!(Test-Path $nvimDir)) {
-    New-Item -ItemType Directory -Path $nvimDir -Force | Out-Null
-    Write-Host "Created: $nvimDir"
-}
-
-# --- 4. シンボリックリンクの作成 ---
-Write-Host "`n[3/4] Linking Configuration Files for Neovim..." -ForegroundColor Green
-
-# Neovim (Modern)
-# Windowsでは ~/AppData/Local/nvim に設定を置く
-$nvimTargetDir = "$HOME\AppData\Local\nvim"
-
-if (Test-Path $nvimTargetDir) {
-    # 既存のディレクトリがある場合はバックアップ
-    $backupNvim = "$nvimTargetDir.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
-    Rename-Item -Path $nvimTargetDir -NewName $backupNvim
-}
-
-# dotfiles/nvim を直接 AppData/Local/nvim にリンク
-New-SymLink -Target "$dotfilesDir\nvim" -Link $nvimTargetDir
-
-# --- 5. Pythonライブラリのセットアップ (AI活用用) ---
-Write-Host "`n[4/4] Setting up Python Libraries for AI..." -ForegroundColor Green
+# --- [2/5] Pythonライブラリのセットアップ ---
+Write-Host "`n[2/$totalSteps] Setting up Python Libraries for AI..." -ForegroundColor Green
 try {
-    # pipのアップグレード
     python -m pip install --upgrade pip
-    
-    # 旧ライブラリの削除と新ライブラリ(google-genai)のインストール
     Write-Host "Installing/Updating google-genai package..."
     python -m pip uninstall -y google-generativeai
     python -m pip install --upgrade google-genai
-    
-    Write-Host "Python libraries installed successfully."
-}
-catch {
-    Write-Warning "Failed to install Python libraries. Please run 'pip install google-genai' manually."
+    Write-Host "Python libraries updated successfully."
+} catch {
+    Write-Warning "Failed to setup Python libraries. Run 'pip install google-genai' manually."
 }
 
-Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
+# --- [3/5] 公式Gemini CLIのインストール ---
+Write-Host "`n[3/$totalSteps] Installing Official Gemini CLI via NPM..." -ForegroundColor Green
+try {
+    npm install -g @google/gemini-cli
+    Write-Host "Official Gemini CLI installed successfully."
+} catch {
+    Write-Warning "Failed to install @google/gemini-cli. Run 'npm install -g @google/gemini-cli' manually."
+}
 
-# --- リンク定義 ---
+# --- [4/5] ディレクトリ構造の準備 ---
+Write-Host "`n[4/$totalSteps] Preparing Directories..." -ForegroundColor Green
+$dirs = @(
+    "$configDir\nvim",
+    "$HOME\.vim"
+)
+foreach ($dir in $dirs) {
+    if (!(Test-Path $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        Write-Host "Created: $dir"
+    }
+}
 
-# 既存のリンク定義に .editorconfig を追加
+# --- [5/5] シンボリックリンクの作成 ---
+Write-Host "`n[5/$totalSteps] Linking Configuration Files..." -ForegroundColor Green
+
+# 1. Neovim (AppData/Local/nvim -> dotfiles/nvim)
+New-SymLink -Target "$dotfilesDir\nvim" -Link "$configDir\nvim"
+
+# 2. Git & EditorConfig
+New-SymLink -Target "$dotfilesDir\git\.gitconfig" -Link "$HOME\.gitconfig"
 New-SymLink -Target "$dotfilesDir\.editorconfig" -Link "$HOME\.editorconfig"
 
-# 1. .gitconfig (共通)
-New-SymLink -Target "$dotfilesDir\git\.gitconfig" -Link "$HOME\.gitconfig"
-
-# 2. Vim (Classic)
+# 3. Vim (Classic)
 New-SymLink -Target "$dotfilesDir\vim\vimrc" -Link "$HOME\.vimrc"
 New-SymLink -Target "$dotfilesDir\vim\gvimrc" -Link "$HOME\.gvimrc"
-
-# .vim ディレクトリの準備
-$vimDir = "$HOME\.vim"
-if (!(Test-Path $vimDir)) {
-    New-Item -ItemType Directory -Path $vimDir -Force | Out-Null
-    Write-Host "Created: $vimDir"
-}
 New-SymLink -Target "$HOME\.vim" -Link "$HOME\vimfiles"
 
-# 3. Neovim (Modern)
-$initVimContent = "set runtimepath^=~/.vim runtimepath+=~/.vim/after`nlet &packpath = &runtimepath`nsource ~/.vimrc"
-$initVimPath = "$nvimDir\init.vim"
+# 4. Neovim 互換性設定 (init.vim がない場合のみ作成)
+$initVimPath = "$configDir\nvim\init.vim"
 if (!(Test-Path $initVimPath)) {
+    $initVimContent = "set runtimepath^=~/.vim runtimepath+=~/.vim/after`nlet &packpath = &runtimepath`nsource ~/.vimrc"
     Set-Content -Path $initVimPath -Value $initVimContent
     Write-Host "Created: Neovim compatibility shim at $initVimPath" -ForegroundColor Cyan
 }
 
-# 4. PowerShell Profile
-$repoProfile = "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1"
+# 5. PowerShell Profile
 $targetProfile = $PROFILE.CurrentUserAllHosts
-$psProfileDir = Split-Path $targetProfile -Parent
+New-SymLink -Target "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1" -Link $targetProfile
 
-if (!(Test-Path $psProfileDir)) {
-    New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null
-    Write-Host "Created: $psProfileDir"
-}
-
-if (Test-Path $repoProfile) {
-    New-SymLink -Target $repoProfile -Link $targetProfile
-} else {
-    Write-Warning "PowerShell profile not found in dotfiles. Skipping link."
-}
-
-# --- 5. 公式Gemini CLIのインストール ---
-Write-Host "`n[5/5] Installing Official Gemini CLI..." -ForegroundColor Green
-try {
-    # npmを使ってグローバルにインストール
-    npm install -g @google/gemini-cli
-    Write-Host "Official Gemini CLI installed successfully."
-}
-catch {
-    Write-Warning "Failed to install Official Gemini CLI. Please run 'npm install -g @google/gemini-cli' manually after restarting the terminal."
-}
-
+# --- セットアップ完了 ---
 Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
-Write-Host "Please restart your terminal to apply changes."
+Write-Host "変更を反映するため、ターミナルを再起動してください。"
+Write-Host "Google API Keyの設定を忘れずに行ってください。"
