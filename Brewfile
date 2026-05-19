@@ -14,4 +14,4 @@ brew "node"
 brew "neovim"
 
 # AI & Others
-# brew "ollama" # 必要に応じて有効化
+brew "ollama"

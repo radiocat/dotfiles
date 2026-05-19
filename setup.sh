@@ -147,9 +147,16 @@ echo "
 if command -v npm &> /dev/null; then
     echo "Installing @google/gemini-cli globally via npm..."
     npm install -g @google/gemini-cli
-    echo "Official Gemini CLI installed successfully."
 else
-    echo "Warning: npm is not found. Skipping @google/gemini-cli installation." >&2
+    echo "⚠️ npm is not found. Please check your Homebrew installation."
+fi
+
+# --- Anthropic Claude CLIのインストール ---
+echo "Installing Anthropic Claude CLI..."
+if command -v npm &> /dev/null; then
+    npm install -g @anthropic-ai/claude-code
+else
+    echo "⚠️ npm is not found. Please check your Homebrew installation."
 fi
 
 # --- [6/$TOTAL_STEPS] Creating local configuration files ---
