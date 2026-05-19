@@ -160,9 +160,40 @@ if (!(Test-Path $initVimPath)) {
 
 # 5. PowerShell Profile
 $targetProfile = $PROFILE.CurrentUserAllHosts
-New-SymLink -Target "$dotfilesDir\windows\Microsoft.PowerShell_profile.ps1" -Link $targetProfile
+$psProfileDir = Split-Path $targetProfile -Parent
 
-# --- セットアップ完了 ---
+if (!(Test-Path $psProfileDir)) {
+    New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null
+    Write-Host "Created: $psProfileDir"
+}
+
+if (Test-Path $repoProfile) {
+    New-SymLink -Target $repoProfile -Link $targetProfile
+} else {
+    Write-Warning "PowerShell profile not found in dotfiles. Skipping link."
+}
+
+# --- 5. 公式Gemini CLIのインストール ---
+Write-Host "`n[5/5] Installing Official Gemini CLI..." -ForegroundColor Green
+try {
+    # npmを使ってグローバルにインストール
+    npm install -g @google/gemini-cli
+    Write-Host "Official Gemini CLI installed successfully."
+}
+catch {
+    Write-Warning "Failed to install Official Gemini CLI. Please run 'npm install -g @google/gemini-cli' manually after restarting the terminal."
+}
+
+# --- Anthropic Claude CLIのインストール ---
+Write-Host "`nInstalling Anthropic Claude CLI..." -ForegroundColor Green
+try {
+    npm install -g @anthropic-ai/claude-code
+    Write-Host "Anthropic Claude CLI installed successfully."
+}
+catch {
+    Write-Warning "Failed to install Anthropic Claude CLI. Please run 'npm install -g @anthropic-ai/claude-code' manually after restarting the terminal."
+}
+
 Write-Host "`n=== Setup Completed! ===" -ForegroundColor Cyan
 Write-Host "変更を反映するため、ターミナルを再起動してください。"
 Write-Host "Google API Keyの設定を忘れずに行ってください。"
