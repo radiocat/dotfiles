@@ -61,9 +61,9 @@ Write-Host "=== Windows Environment Setup Started ===" -ForegroundColor Cyan
 
 $dotfilesDir = "$HOME\dotfiles"
 $configDir = "$HOME\AppData\Local"
-$totalSteps = 5
+$totalSteps = 6
 
-# --- [1/5] モダンツールのインストール (Winget) ---
+# --- [1/6] モダンツールのインストール (Winget) ---
 Write-Host "`n[1/$totalSteps] Updating Winget and Installing Tools..." -ForegroundColor Green
 try {
     winget source update
@@ -101,7 +101,7 @@ foreach ($pkg in $packages) {
     }
 }
 
-# --- [2/5] Pythonライブラリのセットアップ ---
+# --- [2/6] Pythonライブラリのセットアップ ---
 Write-Host "`n[2/$totalSteps] Setting up Python Libraries for AI..." -ForegroundColor Green
 try {
     python -m pip install --upgrade pip
@@ -113,7 +113,7 @@ try {
     Write-Warning "Failed to setup Python libraries. Run 'pip install google-genai' manually."
 }
 
-# --- [3/5] 公式Gemini CLIのインストール ---
+# --- [3/6] 公式Gemini CLIのインストール ---
 Write-Host "`n[3/$totalSteps] Installing Official Gemini CLI via NPM..." -ForegroundColor Green
 try {
     npm install -g @google/gemini-cli
@@ -122,7 +122,7 @@ try {
     Write-Warning "Failed to install @google/gemini-cli. Run 'npm install -g @google/gemini-cli' manually."
 }
 
-# --- [4/5] ディレクトリ構造の準備 ---
+# --- [4/6] ディレクトリ構造の準備 ---
 Write-Host "`n[4/$totalSteps] Preparing Directories..." -ForegroundColor Green
 $dirs = @(
     "$configDir\nvim",
@@ -135,8 +135,8 @@ foreach ($dir in $dirs) {
     }
 }
 
-# --- [5/5] シンボリックリンクの作成 ---
-Write-Host "`n[5/$totalSteps] Linking Configuration Files..." -ForegroundColor Green
+# --- [4/6] シンボリックリンクの作成 ---
+Write-Host "`n[4/$totalSteps] Linking Configuration Files..." -ForegroundColor Green
 
 # 1. Neovim (AppData/Local/nvim -> dotfiles/nvim)
 New-SymLink -Target "$dotfilesDir\nvim" -Link "$configDir\nvim"
@@ -174,7 +174,7 @@ if (Test-Path $repoProfile) {
 }
 
 # --- 5. 公式Gemini CLIのインストール ---
-Write-Host "`n[5/5] Installing Official Gemini CLI..." -ForegroundColor Green
+Write-Host "`n[5/$totalSteps] Installing Official Gemini CLI..." -ForegroundColor Green
 try {
     # npmを使ってグローバルにインストール
     npm install -g @google/gemini-cli
@@ -185,7 +185,7 @@ catch {
 }
 
 # --- Anthropic Claude CLIのインストール ---
-Write-Host "`nInstalling Anthropic Claude CLI..." -ForegroundColor Green
+Write-Host "`n[6/$totalSteps] Installing Anthropic Claude CLI..." -ForegroundColor Green
 try {
     npm install -g @anthropic-ai/claude-code
     Write-Host "Anthropic Claude CLI installed successfully."
