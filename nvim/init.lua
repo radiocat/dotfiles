@@ -1,6 +1,12 @@
--- =============================================================================
+-- ==============================================================================
 -- EM-Ops Neovim Config (Minimal & Fast)
--- =============================================================================
+-- ==============================================================================
+
+-- 0. Compatibility with older Vim configs
+vim.opt.runtimepath:append("~/.vim")
+vim.opt.runtimepath:append("~/.vim/after")
+vim.opt.packpath:append(vim.opt.runtimepath:get())
+-- vim.cmd("source ~/.vimrc") -- Uncomment if you still need to source ~/.vimrc
 
 -- 1. Plugin Manager (lazy.nvim) の自動インストール
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -14,14 +20,14 @@ require("lazy").setup({
   -- 外観
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
   { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
-  
+
   -- 検索 (Unite.vim の後継)
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
-  
+
   -- Git (GitGutter の後継)
   { "lewis6991/gitsigns.nvim" },
   { "tpope/vim-fugitive" }, -- コミットメッセージ作成に必須
-  
+
   -- Markdown (Obsidian ユーザー向け)
   { "preservim/vim-markdown", ft = "markdown" },
 })
