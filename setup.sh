@@ -130,13 +130,17 @@ else
 fi
 
 # Activate venv and install/upgrade Python packages
-# Using explicit path to pip within venv for robustness
 if [ -f "$VENV_DIR/bin/pip" ]; then
     echo "Upgrading pip..."
     "$VENV_DIR/bin/pip" install --upgrade pip
     echo "Installing/Upgrading google-genai..."
     "$VENV_DIR/bin/pip" install --upgrade google-genai
-    echo "Python libraries updated successfully."
+    
+    # Aiderのインストール処理を追加
+    echo "Installing/Upgrading aider-chat..."
+    "$VENV_DIR/bin/pip" install --upgrade aider-chat
+    
+    echo "Python libraries updated successfully."    
 else
     echo "Error: pip not found in virtual environment. Please check Python venv setup." >&2
 fi
